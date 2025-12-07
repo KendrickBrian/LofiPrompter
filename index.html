@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- CRITICAL: Tailwind CDN to ensure UI renders even if build fails -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -33,6 +35,7 @@
       }
     </script>
     <style>
+      /* Fallback CSS variables in case CSS file doesn't load */
       :root {
         --color-1: 0 100% 63%;
         --color-2: 270 100% 63%;
@@ -51,25 +54,21 @@
         font-family: 'Inter', sans-serif;
         color: white;
       }
-      #root {
-        width: 100%;
-        height: 100%;
-      }
     </style>
-<script type="importmap">
+  <script type="importmap">
 {
   "imports": {
     "react": "https://aistudiocdn.com/react@^19.2.1",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
     "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
     "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "clsx": "https://aistudiocdn.com/clsx@^2.1.1",
+    "simplex-noise": "https://aistudiocdn.com/simplex-noise@^4.0.3",
+    "tailwind-merge": "https://aistudiocdn.com/tailwind-merge@^3.4.0",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.25",
     "three": "https://aistudiocdn.com/three@^0.181.2",
     "vite": "https://aistudiocdn.com/vite@^7.2.6",
-    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1",
-    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.25",
-    "tailwind-merge": "https://aistudiocdn.com/tailwind-merge@^3.4.0",
-    "simplex-noise": "https://aistudiocdn.com/simplex-noise@^4.0.3",
-    "clsx": "https://aistudiocdn.com/clsx@^2.1.1"
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
   }
 }
 </script>

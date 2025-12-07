@@ -50,54 +50,52 @@ const App = () => {
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
       
-      // Prompt construction based on the Advanced Expert Guide
-      const inputContext = userMood ? `Входные данные от пользователя: "${userMood}"` : "Входные данные: Случайное, но глубокое и атмосферное настроение, подходящее для вирусного хита";
+      // Prompt construction based on the Expanded Core Formula + Viral Elements
+      const inputContext = userMood ? `User Input/Vibe: "${userMood}"` : "User Input: Surprise me with a high-quality viral track idea";
       
       const systemPrompt = `
-        Ты — топ-продюсер Lo-Fi музыки с 15-летним стажем. Ты знаешь секрет создания "вирусных" треков (Viral Lo-Fi Hits) для Suno AI.
-        Твоя цель: создать ОДИН ИДЕАЛЬНЫЙ промпт на АНГЛИЙСКОМ языке, который гарантирует высокое качество и популярность трека.
+        You are an elite music producer specializing in Suno AI prompts. 
+        Your goal is to generate a concise, professional prompt that follows the "Core Lo-Fi Prompt Formula".
 
         ${inputContext}
 
-        ИСПОЛЬЗУЙ "ЗОЛОТУЮ ФОРМУЛУ ХИТА":
-        [ЖАНР] + [СЛОЖНОЕ НАСТРОЕНИЕ] + [ТЕМП] + [ИНСТРУМЕНТЫ] + [АТМОСФЕРА] + [КОНТЕКСТ] + [ТЕХНИКА]
+        STRICT FORMULA TO USE:
+        [Genre Label], [Mood], [Key Instruments], [Atmosphere/Texture], [Tempo BPM], [Time Signature]
 
-        СТРОГИЕ ПРАВИЛА ИЗ ГАЙДА:
+        GUIDELINES FOR GENERATION:
 
-        1. ТЕМП (КЛЮЧ К УСПЕХУ):
-           - Используй диапазон **80-85 BPM**. Это "золотой стандарт" для учебы и релаксации.
-           - Примеры: "steady 82 BPM", "slow 84 BPM", "relaxed 80 BPM".
+        1. GENRE DIVERSITY (Do not limit to Hip-Hop):
+           - Mix it up based on input: "Lo-fi Jazz", "Ambient Lo-fi", "Retro Lo-fi", "Urban Lo-fi Chillout", "Lo-fi Study Beats", "Dreamy Lo-fi", "Cinematic Lo-fi".
 
-        2. НАСТРОЕНИЕ (КОНТРАСТЫ):
-           - Обязательно используй ПРОТИВОРЕЧИВЫЕ эмоции (Contrasting emotions).
-           - "Melancholic yet warm" (Меланхолично, но тепло).
-           - "Sad yet comforting" (Грустно, но уютно).
-           - "Introspective yet hopeful" (Интроспективно, но с надеждой).
+        2. TEMPO (BPM) & RHYTHM:
+           - For Sleep/Relaxation/Ambient: Use **60-75 BPM**.
+           - For Study/Focus/Viral Hits: Use **80-85 BPM**.
+           - ALWAYS end with **4/4 Time**.
 
-        3. ИНСТРУМЕНТЫ (ВЫБЕРИ ОДНУ "ВЫИГРЫШНУЮ КОМБИНАЦИЮ"):
-           - **Classic**: Soft Rhodes Piano + Warm Deep Bass + Muted Drums.
-           - **Jazz**: Jazz Strings/Violin + Upright Bass + Soft Drums + Ambient Pads + Extended chords (maj7, min11).
-           - **Atmospheric**: Soft Piano + Rain Sounds + Minimal Percussion.
-           - *Важно*: Упоминай "vintage keys", "detuned piano" или "upright bass" вместо простых названий.
+        3. INSTRUMENTATION (Be Specific & Organic):
+           - Piano: "Reflective Piano", "Warm Rhodes", "Uplifting Piano", "Vintage Keys".
+           - Guitar: "Peaceful Guitar", "Jazzy Guitar Melodies", "Clean Electric Guitar".
+           - Bass: "Smooth Upright Bass", "Deep Sub Bass", "Warm Synth Bass".
+           - Drums: "Dusty Boom-bap Drums", "Gentle Percussion", "Minimal Drums", "Loose Pocket Drums".
+           - Strings: "Soft Strings", "Ambient Violin", "Cello Decay".
 
-        4. АТМОСФЕРА И ТЕКСТУРА (ОБЯЗАТЕЛЬНО):
-           - **Vinyl crackle** (есть в 95% хитов).
-           - Доп. текстуры: "tape saturation", "rain sounds", "coffee shop ambience", "dust artifacts".
+        4. ATMOSPHERE (Crucial):
+           - Include ONE specific texture: "Vinyl Crackle", "Tape Hiss", "Subtle Cafe Noise", "Rain Sounds", "City Ambience".
 
-        5. ТЕХНИКА И СТИЛЬ:
-           - "Non-quantized drums" (неквантованные ударные).
-           - "Human swing" (человеческий свинг).
-           - "J Dilla style off-beat rhythm".
+        5. MOOD DESCRIPTORS:
+           - Combine 2 contrasting or complementary moods: "Chill & Dreamy", "Melancholic yet Warm", "Nostalgic & Bright".
 
-        6. КОНТЕКСТ:
-           - "Perfect for late-night study", "Morning coffee vibes", "Deep focus work".
+        6. CONCISENESS:
+           - Suno prefers prompts around 200 characters. Be punchy. Use comma separation.
 
-        ФОРМАТ ОТВЕТА:
-        - Верни ТОЛЬКО текст промпта на английском языке.
-        - Без кавычек. Максимум 400 символов.
+        EXAMPLES OF PERFECT OUTPUTS:
+        - "Lo-fi Jazz, Chill & Dreamy, Warm Rhodes, Dusty Boom-bap Drums with Loose Pocket, Smooth Upright Bass, Jazzy Guitar Melodies, Tape Hiss, 82 BPM, 4/4 Time"
+        - "Chill Lo-fi Ambient, Warm Synth Pads, Smooth Bass, Ethereal Vocals, Vinyl Crackle, 60 BPM, 4/4 Time"
+        - "Urban Lo-fi Chillout, Bright Guitar, Smooth Bass, Subtle Synth, City Ambience, 68 BPM, 4/4 Time"
+        - "Lo-fi Study Beats, Focus & Calm, Soft Piano, Minimal Percussion, Rain Sounds, 84 BPM, 4/4 Time"
 
-        ПРИМЕР ИДЕАЛЬНОГО ВЫВОДА:
-        Lo-Fi Hip-Hop track featuring soft Rhodes piano and warm deep upright bass, melancholic yet warm, 82 BPM, with subtle vinyl crackle and rain sounds. Non-quantized drums with human swing. Perfect for late-night study sessions.
+        OUTPUT FORMAT:
+        Return ONLY the English prompt string. No explanations.
       `;
 
       const response = await ai.models.generateContent({
@@ -108,7 +106,7 @@ const App = () => {
       setPrompt(response.text?.trim() || "");
     } catch (error) {
       console.error("Error generating prompt:", error);
-      setPrompt("Ошибка связи с космосом. Попробуйте еще раз. (Проверьте API ключ)");
+      setPrompt("Connection error. Please try again. (Check API Key)");
     } finally {
       setLoading(false);
     }
@@ -135,21 +133,18 @@ const App = () => {
           <div className="bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-[0_0_50px_rgba(139,92,246,0.15)] relative z-50">
             <div className="text-center mb-8">
               <div className="mb-4 h-24 flex items-center justify-center overflow-hidden">
-                <ParticleTextEffect words={["VIRAL", "LO-FI", "HITS"]} />
+                <ParticleTextEffect words={["COSMIC", "LO-FI", "VIBES"]} />
               </div>
               <p className="text-xs text-indigo-200/60 font-mono tracking-widest uppercase mt-2">
-                Pro Suno AI Prompt Generator
+                Suno AI Professional Prompt Generator
               </p>
             </div>
 
             <div className="space-y-6">
               <div className="relative group w-full z-50">
-                <label className="text-xs text-gray-400 ml-2 mb-1 block uppercase font-mono tracking-wider">
-                  Настроение / Контекст
-                </label>
                 <input 
                   type="text" 
-                  placeholder="Напр: Учеба ночью, меланхолия но тепло"
+                  placeholder="Напр: Дождливая ночь в Токио, меланхолия"
                   value={userMood}
                   onChange={(e) => setUserMood(e.target.value)}
                   className="w-full p-4 bg-white/10 border border-white/20 rounded-xl text-white font-sans placeholder-white/50 focus:outline-none focus:border-purple-500/50 focus:bg-white/15 transition-all text-center text-lg relative z-50"
@@ -174,7 +169,7 @@ const App = () => {
                       <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}/>
                       <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}/>
                     </span>
-                  ) : "Создать Хит (80-85 BPM)"}
+                  ) : "Сгенерировать Хит"}
                 </RainbowButton>
               </div>
             </div>
@@ -197,7 +192,7 @@ const App = () => {
           </div>
           
           <div className="mt-6 text-center opacity-30 text-[10px] font-mono tracking-[0.2em] hover:opacity-60 transition-opacity cursor-default relative z-50">
-            Powered by Golden Lo-Fi Formula
+            Made with LOVE
           </div>
         </div>
       </div>

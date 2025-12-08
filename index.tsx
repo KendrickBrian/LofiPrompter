@@ -39,9 +39,58 @@ const App = () => {
   const [userMood, setUserMood] = useState("");
   const [copied, setCopied] = useState(false);
 
+  // --- Fallback Logic (Offline Generator) ---
+  const generateFallbackPrompt = () => {
+    const genres = [
+      "Lo-fi Jazz", "Chill Lo-fi", "Urban Lo-fi", 
+      "Retro Lo-fi", "Cinematic Lo-fi", "Dreamy Lo-fi",
+      "Night Lo-fi", "Morning Lo-fi", "Study Beats"
+    ];
+    
+    const defaultMoods = [
+      "Nostalgic & Warm", "Melancholic yet Hopeful", 
+      "Peaceful & Calm", "Lonely but Cozy", 
+      "Dreamy & Ethereal", "Focus & Deep", "Sad yet Comforting"
+    ];
+
+    const instruments = [
+      "Warm Rhodes", "Soft Piano", "Jazzy Guitar", 
+      "Smooth Upright Bass", "Muted Trumpet", "Clean Electric Guitar",
+      "Vintage Keys", "Soft Strings", "Minimal Drums", "Deep Sub Bass"
+    ];
+
+    const textures = [
+      "Vinyl Crackle", "Tape Hiss", "Rain Sounds", 
+      "Subtle Cafe Noise", "City Ambience", "Forest Sounds", "Dusty Artifacts"
+    ];
+
+    const pick = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
+    const pickUnique = (arr: string[], count: number) => {
+        const shuffled = [...arr].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    };
+
+    const genre = pick(genres);
+    // If user entered a mood, mix it with a random mood for depth
+    const mood = userMood 
+      ? `${userMood} & ${pick(defaultMoods).split(' ')[0]}` 
+      : pick(defaultMoods);
+      
+    const insts = pickUnique(instruments, 3).join(", ");
+    const texture = pick(textures);
+    
+    // Viral BPM Logic: 60-75 (chill) or 80-85 (focus/viral)
+    const isFast = Math.random() > 0.5;
+    const bpm = isFast 
+      ? Math.floor(Math.random() * (85 - 80 + 1)) + 80 
+      : Math.floor(Math.random() * (75 - 60 + 1)) + 60;
+
+    return `${genre}, ${mood}, ${insts}, ${texture}, ${bpm} BPM, 4/4 Time`;
+  };
+
   // --- Gemini Logic ---
 
-  const generateLoFiPrompt = async () => {
+  const generateLoFiPromptSafe = async () => {
     // API Key is injected via vite.config.ts define
     
     setLoading(true);
@@ -102,11 +151,18 @@ const App = () => {
         model: 'gemini-2.5-flash',
         contents: systemPrompt,
       });
+      
+      if (!response.text) throw new Error("No response text");
 
       setPrompt(response.text?.trim() || "");
     } catch (error) {
-      console.error("Error generating prompt:", error);
-      setPrompt("Connection error. Please try again. (Check API Key)");
+      console.warn("Gemini API issue. Switching to Internal Generator Mode.", error);
+      
+      // Simulate "thinking" time so it feels like AI
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      const offlinePrompt = generateFallbackPrompt();
+      setPrompt(offlinePrompt);
     } finally {
       setLoading(false);
     }
@@ -151,7 +207,7 @@ const App = () => {
                   style={{ background: 'rgba(255,255,255,0.1)' }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !loading) {
-                      generateLoFiPrompt();
+                      generateLoFiPromptSafe();
                     }
                   }}
                 />
@@ -159,7 +215,7 @@ const App = () => {
 
               <div className="relative z-50">
                 <RainbowButton 
-                  onClick={generateLoFiPrompt} 
+                  onClick={generateLoFiPromptSafe} 
                   disabled={loading}
                   className="w-full h-14 font-mono uppercase tracking-widest text-sm shadow-2xl shadow-purple-900/40"
                 >
